@@ -1,5 +1,6 @@
 import { Action } from "../types/action.type";
 import { getRandomInt } from "../helpers/random-int.helper";
+import { Item } from "../types/item.type";
 
 export abstract class Character {
     name: string;
@@ -7,12 +8,31 @@ export abstract class Character {
     attackSpeed: number;
     possibleActions: Action[];
     isDefending: boolean = false;
+    inventory: Item[] = [];
+    damageBonus: number = 0;
 
     constructor(name: string, health: number, attackSpeed: number, possibleActions: Action[]) {
         this.name = name;
         this.health = health;
         this.attackSpeed = attackSpeed;
         this.possibleActions = possibleActions;
+    }
+
+    equip(item: Item): void {
+        this.inventory.push(item);
+        console.log(`${this.name} s'équipe de "${item.name}" (+${item.pints} ${item.modifier})`);
+
+        switch (item.modifier) {
+            case 'health':
+                this.health += item.pints;
+                break;
+            case 'attackSpeed':
+                this.attackSpeed += item.pints;
+                break;
+            case 'attackDamage':
+                this.damageBonus += item.pints;
+                break;
+        }
     }
 
     takeDamage(amount: number): void {
@@ -51,7 +71,7 @@ export abstract class Character {
             let min = action.minDamage || 0;
             let max = action.maxDamage && action.maxDamage >= min ? action.maxDamage : min;
 
-            const damage = getRandomInt(min, max);
+            const damage = getRandomInt(min, max) + this.damageBonus;
 
             console.log(`${this.name} utilise "${action.name}" sur ${target.name} !`);
             target.takeDamage(damage);

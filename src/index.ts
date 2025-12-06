@@ -2,8 +2,15 @@ import { Warrior } from "./models/warrior";
 import { Mage } from "./models/mage";
 import { determineAttackOrder } from "./helpers/determine-attack-order.helper";
 
+import { ITEMS } from "./constants/items.constants";
+
 const booba = new Warrior("Booba");
 const kaaris = new Mage("Kaaris");
+
+// Equip items
+booba.equip(ITEMS[0]); // Épée de Brodard (+4 Dmg)
+kaaris.equip(ITEMS[4]); // Mise à jour Windows (+8 Dmg)
+
 
 console.log(`${booba.name} (Warrior) vs ${kaaris.name} (Mage) - FIGHT!`);
 
